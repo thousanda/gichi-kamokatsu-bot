@@ -1,0 +1,2 @@
+# Gichi Kamokatsu Bot
+Podcast番組「ギチの完全人間ランド」のスポットスポンサーの締め切り日を教えてくれるbotです

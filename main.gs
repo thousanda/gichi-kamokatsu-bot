@@ -1,9 +1,11 @@
 /*
-  翌月の第一火曜日の13日前である、水曜日の23:59が締め切り
+  スポットスポンサーの締め切り日を計算して通知する
 */
 
 function main() {
-  const message = "今日の23:59がスポットスポンサーの締切日だよ！🦆"
+  const msg1Week = "1週間後の23:59がスポットスポンサーの締切日だよ！🦆";
+  const msgTomorrow = "明日の23:59がスポットスポンサーの締切日だよ！🦆";
+  const msgToday = "今日の23:59がスポットスポンサーの締切日だよ！🦆";
 
   // スクリプトプロパティからLINE APIのチャネルアクセストークンを取得する
   const scriptProperties = PropertiesService.getScriptProperties();
@@ -13,58 +15,30 @@ function main() {
     throw new Error("channel access token not found")
   }
 
-  // デバッグログ
-  const nextMonthFirstTuesday = getNextMonthFirstTuesday();
-  console.log("nextMonthFirstTuesday: ", nextMonthFirstTuesday);
-  console.log("13日前: ", getNDayBeforeDate(nextMonthFirstTuesday, 13));
-  console.log("締め切り: ", getDeadline());
-  console.log("今日は締め切り日？: ", isDeadline());
+  // 締め切り日を取得
+  const deadline = new Deadline();
+  console.log("締め切り日: ", deadline.getDate());
+  console.log(deadline.isToday());
 
-  // 今日が締め切り日なら通知する
-  if (isDeadline()) {
-    console.log("通知開始します");
-    const resp = sendLineBroadcast(message, token);
+  // 1週間前、前日、当日に通知する
+  if (deadline.isNDaysLater(7)) {
+    // 締め切り日は1週間後？
+    console.log("1週間後です。通知します");
+    const resp = sendLineBroadcast(msg1Week, token);
     console.log(resp);
+  } else if (deadline.isNDaysLater(1)) {
+    //　締め切り日は明日？
+    console.log("明日です。通知します")
+    const resp = sendLineBroadcast(msgTomorrow, token);
+    console.log(resp);
+  } else if (deadline.isToday()) {
+    // 締め切り日は今日？
+    console.log("本日です。通知開始します");
+    const resp = sendLineBroadcast(msgToday, token);
+    console.log(resp);
+  } else {
+    console.log("通知しません");
   }
-}
-
-/* 締め切り日を取得するための補助関数たち */
-// 翌月の第一火曜日を取得する
-function getNextMonthFirstTuesday() {
-  // 今日の日付を取得
-  const today = new Date();
-  // 来月の最初の日付を取得
-  const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-  // 最初の日付が火曜日でない場合は、火曜日に調整する
-  const daysUntilTuesday = (2 - nextMonth.getDay() + 7) % 7;
-  const firstTuesday = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), nextMonth.getDate() + daysUntilTuesday);
-  return firstTuesday;
-}
-
-// 日付 (Date型オブジェクト) と日数を受け取り、受け取った日付からその日数を引いた日付を返す
-function getNDayBeforeDate(date, n) {
-  // 引数の日付からn日引いた日付を取得
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate() - n);
-}
-
-// 翌月の第一火曜日の13日前である、水曜日の23:59が締め切りなので、その日付を返す
-function getDeadline() {
-  const nextMonthFirstTuesday = getNextMonthFirstTuesday();
-  return getNDayBeforeDate(nextMonthFirstTuesday, 13);
-}
-
-// 年月日が一致しているかどうかをチェック
-function　areSameDate(date1, date2) {
-  return date1.getFullYear() === date2.getFullYear()
-      && date1.getMonth() === date2.getMonth()
-      && date1.getDate() === date2.getDate();
-}
-
-// 今日が締め切り日か否かを返す
-function isDeadline() {
-  const today = new Date();
-  const deadline = getDeadline();
-  return areSameDate(today, deadline);
 }
 
 function sendLineBroadcast(msg, token) {
@@ -78,23 +52,23 @@ function sendLineBroadcast(msg, token) {
   };
   const payload = {
     "messages":[
-        {
-            "type":"text",
-            "text":msg
-        },
-        {
-          "type": "text",
-          "text": sponsorUrl
-        }
+      {
+        "type":"text",
+        "text":msg
+      },
+      {
+        "type": "text",
+        "text": sponsorUrl
+      }
     ]
   };
-  
+
   const options = {
     "method": "POST",
     "headers": headers,
     "payload": JSON.stringify(payload)
   };
-  
+
   const response = UrlFetchApp.fetch(apiUrl, options);
   return response.getContentText();
 }

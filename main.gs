@@ -22,7 +22,6 @@ function main() {
 
   // 今日が締め切り日なら通知する
   if (isDeadline()) {
-  //if (true) {  // テスト用の必ず通す条件
     console.log("通知開始します");
     const resp = sendLineBroadcast(message, token);
     console.log(resp);
@@ -64,8 +63,6 @@ function　areSameDate(date1, date2) {
 // 今日が締め切り日か否かを返す
 function isDeadline() {
   const today = new Date();
-  //const today = new Date('2023-03-22T00:00:00');  // テスト用の日付
-  console.log(today);
   const deadline = getDeadline();
   return areSameDate(today, deadline);
 }

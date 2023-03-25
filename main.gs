@@ -3,18 +3,28 @@
 */
 
 function main() {
-  const message = "今日はスポットスポンサーの締切日だよ！🦆"
+  const message = "今日の23:59がスポットスポンサーの締切日だよ！🦆"
 
+  // スクリプトプロパティからLINE APIのチャネルアクセストークンを取得する
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const token = scriptProperties.getProperty('token');
+  if (token === null || token === "") {
+    console.log("tokenが空です")
+    throw new Error("channel access token not found")
+  }
+
+  // デバッグログ
   const nextMonthFirstTuesday = getNextMonthFirstTuesday();
   console.log("nextMonthFirstTuesday: ", nextMonthFirstTuesday);
   console.log("13日前: ", getNDayBeforeDate(nextMonthFirstTuesday, 13));
   console.log("締め切り: ", getDeadline());
   console.log("今日は締め切り日？: ", isDeadline());
 
+  // 今日が締め切り日なら通知する
   if (isDeadline()) {
   // if (true) {  // テスト用の必ず通す条件
     console.log("通知開始します");
-    const resp = sendLineBroadcast(message);
+    const resp = sendLineBroadcast(message, token);
     console.log(resp);
   }
 }
@@ -60,9 +70,10 @@ function isDeadline() {
   return areSameDate(today, deadline);
 }
 
-function sendLineBroadcast(msg) {
-  const url = "https://api.line.me/v2/bot/message/broadcast";
-  const token = "";
+function sendLineBroadcast(msg, token) {
+  const apiUrl = "https://api.line.me/v2/bot/message/broadcast";
+  const sponsorUrl = "https://higuchi.world/gichiland-spot-sponsor"
+
   const headers = {
     "Content-Type": "application/json",
     "Authorization": "Bearer " + token
@@ -73,6 +84,10 @@ function sendLineBroadcast(msg) {
         {
             "type":"text",
             "text":msg
+        },
+        {
+          "type": "text",
+          "text": sponsorUrl
         }
     ]
   };
@@ -83,6 +98,6 @@ function sendLineBroadcast(msg) {
     "payload": JSON.stringify(payload)
   };
   
-  const response = UrlFetchApp.fetch(url, options);
+  const response = UrlFetchApp.fetch(apiUrl, options);
   return response.getContentText();
 }

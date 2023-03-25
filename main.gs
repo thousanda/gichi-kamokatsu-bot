@@ -11,8 +11,8 @@ function main() {
   console.log("締め切り: ", getDeadline());
   console.log("今日は締め切り日？: ", isDeadline());
 
-  //if (isDeadline()) {
-  if (true) {  // テスト用の必ず通す条件
+  if (isDeadline()) {
+  // if (true) {  // テスト用の必ず通す条件
     console.log("通知開始します");
     const resp = sendLineBroadcast(message);
     console.log(resp);

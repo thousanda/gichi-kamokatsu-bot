@@ -29,6 +29,11 @@ class Deadline {
     return this.isNDaysLater(0);
   }
 
+  // どの日から見た締め切り日なのかをDateインスタンスで返す
+  getNow() {
+    return this.now;
+  }
+
   // 締め切り日のDateインスタンスを返す
   getDate() {
     return this.date;
@@ -73,7 +78,7 @@ class Deadline {
     }
     // 上記の日付が今日よりも過去の日付だった場合、次の締め切り日を返さないといけない
     // 翌々月の第一火曜日の13日前
-    return this.getNDaysBeforeDate_(getNextNextMonthFirstTuesday_(), 13);
+    return this.getNDaysBeforeDate_(this.getNextNextMonthFirstTuesday_(), 13);
   }
 }
 

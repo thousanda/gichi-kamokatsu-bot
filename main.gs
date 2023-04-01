@@ -2,11 +2,11 @@
   スポットスポンサーの締め切り日を計算して通知する
 */
 
-function main() {
-  const msg1Week = "1週間後の23:59がスポットスポンサーの締切日だよ！🦆";
-  const msgTomorrow = "明日の23:59がスポットスポンサーの締切日だよ！🦆";
-  const msgToday = "今日の23:59がスポットスポンサーの締切日だよ！🦆";
+const msg1Week = "1週間後の23:59がスポットスポンサーの締切日だよ！🦆";
+const msgTomorrow = "明日の23:59がスポットスポンサーの締切日だよ！🦆";
+const msgToday = "今日の23:59がスポットスポンサーの締切日だよ！🦆";
 
+function main() {
   // スクリプトプロパティからLINE APIのチャネルアクセストークンを取得する
   const scriptProperties = PropertiesService.getScriptProperties();
   const token = scriptProperties.getProperty('token');
@@ -16,32 +16,40 @@ function main() {
   }
 
   // 締め切り日を取得
-  const deadline = new Deadline();
+  const deadline = newDeadline();
   console.log("締め切り日: ", deadline.getDate());
-  console.log(deadline.isToday());
 
+  // 条件に応じて通知
+  notify_(deadline, token)
+}
+
+function notify_(deadline, token) {
   // 1週間前、前日、当日に通知する
   if (deadline.isNDaysLater(7)) {
     // 締め切り日は1週間後？
     console.log("1週間後です。通知します");
-    const resp = sendLineBroadcast(msg1Week, token);
+    const resp = sendLineBroadcast_(msg1Week, token);
     console.log(resp);
+    return true;
   } else if (deadline.isNDaysLater(1)) {
     //　締め切り日は明日？
     console.log("明日です。通知します")
-    const resp = sendLineBroadcast(msgTomorrow, token);
+    const resp = sendLineBroadcast_(msgTomorrow, token);
     console.log(resp);
+    return true;
   } else if (deadline.isToday()) {
     // 締め切り日は今日？
     console.log("本日です。通知開始します");
-    const resp = sendLineBroadcast(msgToday, token);
+    const resp = sendLineBroadcast_(msgToday, token);
     console.log(resp);
-  } else {
-    console.log("通知しません");
+    return true;
   }
+
+  console.log("通知しません");
+  return false
 }
 
-function sendLineBroadcast(msg, token) {
+function sendLineBroadcast_(msg, token) {
   const apiUrl = "https://api.line.me/v2/bot/message/broadcast";
   const sponsorUrl = "https://higuchi.world/gichiland-spot-sponsor"
 

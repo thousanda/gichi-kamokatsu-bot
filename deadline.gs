@@ -2,9 +2,19 @@
   翌月の第一火曜日の13日前である、水曜日の23:59が締め切り
 */
 
+// 今日目線で次の締め切りを示すDeadlineを取得する
+function newDeadline() {
+  return new Deadline(new Date());
+}
+
+// 指定された日付目線で次の締め切りを示すDeadlineを取得する
+function newDeadlineFromSpecifiedDate(date) {
+  return new Deadline(date);
+}
+
 class Deadline {
-  constructor() {
-    this.today = new Date();
+  constructor(today) {
+    this.today = today;
     this.date = getDeadline();
   }
   isNDaysLater(n) {

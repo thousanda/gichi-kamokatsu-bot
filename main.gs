@@ -16,7 +16,7 @@ function main() {
   }
 
   // 締め切り日を取得
-  const deadline = new Deadline();
+  const deadline = newDeadline();
   console.log("締め切り日: ", deadline.getDate());
   console.log(deadline.isToday());
 

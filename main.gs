@@ -24,24 +24,24 @@ function main() {
   if (deadline.isNDaysLater(7)) {
     // 締め切り日は1週間後？
     console.log("1週間後です。通知します");
-    const resp = sendLineBroadcast(msg1Week, token);
+    const resp = sendLineBroadcast_(msg1Week, token);
     console.log(resp);
   } else if (deadline.isNDaysLater(1)) {
     //　締め切り日は明日？
     console.log("明日です。通知します")
-    const resp = sendLineBroadcast(msgTomorrow, token);
+    const resp = sendLineBroadcast_(msgTomorrow, token);
     console.log(resp);
   } else if (deadline.isToday()) {
     // 締め切り日は今日？
     console.log("本日です。通知開始します");
-    const resp = sendLineBroadcast(msgToday, token);
+    const resp = sendLineBroadcast_(msgToday, token);
     console.log(resp);
   } else {
     console.log("通知しません");
   }
 }
 
-function sendLineBroadcast(msg, token) {
+function sendLineBroadcast_(msg, token) {
   const apiUrl = "https://api.line.me/v2/bot/message/broadcast";
   const sponsorUrl = "https://higuchi.world/gichiland-spot-sponsor"
 

@@ -2,9 +2,9 @@
   スポットスポンサーの締め切り日を計算して通知する
 */
 
-const msg1Week = "1週間後の23:59がスポットスポンサーの締切日だよ！🦆";
-const msgTomorrow = "明日の23:59がスポットスポンサーの締切日だよ！🦆";
-const msgToday = "今日の23:59がスポットスポンサーの締切日だよ！🦆";
+const msg1Week = "1週間後がスポットスポンサーの締切だよ！🦆";
+const msgTomorrow = "明日がスポットスポンサーの締切だよ！🦆";
+const msgToday = "今日がスポットスポンサーの締切だよ！🦆";
 
 function main() {
   // スクリプトプロパティからLINE APIのチャネルアクセストークンを取得する
@@ -17,8 +17,8 @@ function main() {
 
   // 締め切り日を取得
   const deadline = newDeadline();
-  console.log("締め切り日: ", deadline.getDate());
-
+  console.log("締め切り: ", deadline.getDate());
+  
   // 条件に応じて通知
   notify_(deadline, token)
 }
@@ -28,19 +28,19 @@ function notify_(deadline, token) {
   if (deadline.isNDaysLater(7)) {
     // 締め切り日は1週間後？
     console.log("1週間後です。通知します");
-    const resp = sendLineBroadcast_(msg1Week, token);
+    const resp = sendLineBroadcast_(msg1Week, deadline.toString(), token);
     console.log(resp);
     return true;
   } else if (deadline.isNDaysLater(1)) {
     //　締め切り日は明日？
     console.log("明日です。通知します")
-    const resp = sendLineBroadcast_(msgTomorrow, token);
+    const resp = sendLineBroadcast_(msgTomorrow, deadline.toString(), token);
     console.log(resp);
     return true;
   } else if (deadline.isToday()) {
     // 締め切り日は今日？
     console.log("本日です。通知開始します");
-    const resp = sendLineBroadcast_(msgToday, token);
+    const resp = sendLineBroadcast_(msgToday, deadline.toString(), token);
     console.log(resp);
     return true;
   }
@@ -49,7 +49,7 @@ function notify_(deadline, token) {
   return false
 }
 
-function sendLineBroadcast_(msg, token) {
+function sendLineBroadcast_(msg, deadlineStr, token) {
   const apiUrl = "https://api.line.me/v2/bot/message/broadcast";
   const sponsorUrl = "https://higuchi.world/gichiland-spot-sponsor"
 
@@ -61,8 +61,12 @@ function sendLineBroadcast_(msg, token) {
   const payload = {
     "messages":[
       {
-        "type":"text",
-        "text":msg
+        "type": "text",
+        "text": msg
+      },
+      {
+        "type": "text",
+        "text": "締切: " + deadlineStr
       },
       {
         "type": "text",

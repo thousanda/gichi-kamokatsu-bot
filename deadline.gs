@@ -39,6 +39,15 @@ class Deadline {
     return this.date;
   }
 
+  // 締め切りを文字列で返す
+  toString() {
+    const daysKanji = ["日", "月", "火", "水", "木", "金", "土"];
+    const month = this.date.getMonth() + 1;
+    const day = this.date.getDate();
+    const dayOfWeek = daysKanji[this.date.getDay()];
+    return month.toString() + "月" + day.toString() + "日 (" + dayOfWeek.toString() + ") 23:59";
+  }
+
   /* 内部でしか使いたくないメソッドたち */
   // 翌月の第一火曜日を取得する
   getNextMonthFirstTuesday_() {
@@ -83,7 +92,7 @@ class Deadline {
 }
 
 // 年月日が一致しているかどうかをチェック
-function　areSameDates_(date1, date2) {
+function areSameDates_(date1, date2) {
   return date1.getFullYear() === date2.getFullYear()
       && date1.getMonth() === date2.getMonth()
       && date1.getDate() === date2.getDate();

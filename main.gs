@@ -2,9 +2,9 @@
   スポットスポンサーの締め切り日を計算して通知する
 */
 
-const msg1Week = "1週間後がスポットスポンサーの締切だよ！🦆";
-const msgTomorrow = "明日がスポットスポンサーの締切だよ！🦆";
-const msgToday = "今日がスポットスポンサーの締切だよ！🦆";
+const msg1Week = "1週間後がお便りの締切だよ！🦆\n(現在、スポットスポンサー制度は停止されています)";
+const msgTomorrow = "明日がお便りの締切だよ！🦆\n(現在、スポットスポンサー制度は停止されています)";
+const msgToday = "今日がお便りの締切だよ！🦆\n(現在、スポットスポンサー制度は停止されています)";
 
 function main() {
   // スクリプトプロパティからLINE APIのチャネルアクセストークンを取得する
@@ -18,7 +18,7 @@ function main() {
   // 締め切り日を取得
   const deadline = newDeadline();
   console.log("締め切り: ", deadline.getDate());
-  
+
   // 条件に応じて通知
   notify_(deadline, token)
 }
@@ -51,7 +51,7 @@ function notify_(deadline, token) {
 
 function sendLineBroadcast_(msg, deadlineStr, token) {
   const apiUrl = "https://api.line.me/v2/bot/message/broadcast";
-  const sponsorUrl = "https://higuchi.world/gichiland-spot-sponsor"
+  const formUrl = "https://gichi.world/"
 
   const headers = {
     "Content-Type": "application/json",
@@ -70,7 +70,7 @@ function sendLineBroadcast_(msg, deadlineStr, token) {
       },
       {
         "type": "text",
-        "text": sponsorUrl
+        "text": formUrl
       }
     ]
   };

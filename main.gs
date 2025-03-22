@@ -2,9 +2,9 @@
   スポットスポンサーの締め切り日を計算して通知する
 */
 
-const msg1Week = "1週間後がお便りの締切だよ！🦆\n(現在、スポットスポンサー制度は停止されています)";
-const msgTomorrow = "明日がお便りの締切だよ！🦆\n(現在、スポットスポンサー制度は停止されています)";
-const msgToday = "今日がお便りの締切だよ！🦆\n(現在、スポットスポンサー制度は停止されています)";
+const msg1Week = "1週間後がスポットスポンサーの締切だよ！🦆\n(すでに売り切れてるカモ！？)";
+const msgTomorrow = "明日がスポットスポンサーの締切だよ！🦆\n(すでに売り切れてるカモ！？)";
+const msgToday = "今日がスポットスポンサーの締切だよ！🦆\n(すでに売り切れてるカモ！？)";
 
 function main() {
   // スクリプトプロパティからLINE APIのチャネルアクセストークンを取得する
@@ -51,7 +51,7 @@ function notify_(deadline, token) {
 
 function sendLineBroadcast_(msg, deadlineStr, token) {
   const apiUrl = "https://api.line.me/v2/bot/message/broadcast";
-  const formUrl = "https://gichi.world/"
+  const formUrl = "https://store.gichi.world/"
 
   const headers = {
     "Content-Type": "application/json",
